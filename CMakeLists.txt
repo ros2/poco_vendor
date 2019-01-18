@@ -86,6 +86,10 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
+  package.xml
+  DESTINATION share/${PROJECT_NAME})
+
+install(FILES
   "${PROJECT_BINARY_DIR}/poco_vendorConfig.cmake"
   "${PROJECT_BINARY_DIR}/poco_vendorConfig-version.cmake"
   DESTINATION share/${PROJECT_NAME}/cmake)
