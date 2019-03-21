@@ -1,17 +1,26 @@
 cmake_minimum_required(VERSION 3.5)
 project(poco_vendor VERSION "1.1.1")
 
+option(FORCE_BUILD_VENDOR_PKG
+  "Build Poco from source, even if system-installed package is available"
+  OFF)
+
 # Can work with poco 1.4.1p1 (earliest to use recursive mutexes on Linux)
 # 1.6.1 is the first version to ship with PocoConfigVersion.cmake
-find_package(Poco "1.6.1" COMPONENTS Foundation QUIET)
+if(NOT FORCE_BUILD_VENDOR_PKG)
+  find_package(Poco "1.6.1" COMPONENTS Foundation QUIET)
+endif()
+
 
 if(NOT Poco_FOUND)
+  set(POCO_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+
   # If Poco was not found, download and build from source
   if(DEFINED CMAKE_BUILD_TYPE)
     list(APPEND extra_cmake_args -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
   endif()
   if(WIN32)
-    list(APPEND extra_cmake_args "-DCMAKE_CXX_FLAGS=/wd4244 /wd4530 /wd4577")
+    list(APPEND POCO_CXX_FLAGS "/wd4244 /wd4530 /wd4577")
   else()
     list(APPEND extra_cmake_args "-DCMAKE_C_FLAGS=-Wno-shift-negative-value")
     list(APPEND extra_cmake_args "-DCMAKE_CXX_STANDARD=14")
@@ -46,6 +55,9 @@ if(NOT Poco_FOUND)
       endif()
     endif()
   endif()
+  list(APPEND extra_cmake_args "-DCMAKE_CXX_FLAGS=${POCO_CXX_FLAGS}")
+  list(APPEND extra_cmake_args "-DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
+  list(APPEND extra_cmake_args "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
   include(ExternalProject)
 
   ExternalProject_Add(poco-1.8.0.1-release
