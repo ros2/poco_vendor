@@ -17,6 +17,11 @@
   <depend>pcre</depend>
   <depend>zlib</depend>
 
+  <test_depend>ament_cmake_copyright</test_depend>
+  <test_depend>ament_cmake_lint_cmake</test_depend>
+  <test_depend>ament_cmake_test</test_depend>
+  <test_depend>ament_cmake_xmllint</test_depend>
+
   <export>
     <build_type>cmake</build_type>
   </export>
