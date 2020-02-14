@@ -60,7 +60,7 @@ if(NOT Poco_FOUND)
   list(APPEND extra_cmake_args "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}")
   include(ExternalProject)
 
-  ExternalProject_Add(poco-1.8.0.1-release
+  externalproject_add(poco-1.8.0.1-release
     URL https://github.com/pocoproject/poco/archive/poco-1.8.0.1-release.tar.gz
     URL_MD5 07aa03d7976d0dbc141d95821c104c10
     TIMEOUT 600
@@ -105,3 +105,19 @@ install(FILES
   "${PROJECT_BINARY_DIR}/poco_vendorConfig.cmake"
   "${PROJECT_BINARY_DIR}/poco_vendorConfig-version.cmake"
   DESTINATION share/${PROJECT_NAME}/cmake)
+
+find_package(ament_cmake_test QUIET)
+if(BUILD_TESTING)
+  find_package(ament_cmake_copyright QUIET)
+  find_package(ament_cmake_lint_cmake QUIET)
+  find_package(ament_cmake_xmllint QUIET)
+  if(ament_cmake_copyright_FOUND)
+    ament_copyright()
+  endif()
+  if(ament_cmake_lint_cmake_FOUND)
+    ament_lint_cmake()
+  endif()
+  if(ament_cmake_xmllint_FOUND)
+    ament_xmllint()
+  endif()
+endif()
